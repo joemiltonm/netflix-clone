@@ -41,7 +41,8 @@ export default NextAuth({
                     }
                 },
             async authorize(credentials){
-                if (credentials?.email || !credentials?.password){
+                console.log("in authorize function")
+                if (!credentials?.email || !credentials?.password){
                     throw new Error('Email and password required')
                 }
                 const user = await prismadb.user.findUnique({
@@ -59,7 +60,6 @@ export default NextAuth({
                     if (!isCorrectPassword){
                         throw new Error("incorrect password");
                     }
-
                     return user;
             }
         })
@@ -76,5 +76,11 @@ export default NextAuth({
         secret:process.env.NEXTAUTH_JWT_SECRET
     },
     secret: process.env.NEXTAUTH_SECRET,
+    callbacks: {
+        async session({ session}) {
+            console.log(session)
+            return session
+          }
+    }      
 })
 

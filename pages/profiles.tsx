@@ -3,22 +3,22 @@ import { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-// export async function getServerSideProps(context: NextPageContext){
-//     const session = await getSession(context);
+export async function getServerSideProps(context: NextPageContext){
+    const session = await getSession(context);
 
-//     if(!session){
-//         return {
-//             redirect:{
-//                 destination:'/auth',
-//                 permanant:false
-//             }
-//         }
-//     }
+    if(!session){
+        return {
+            redirect:{
+                destination:'/Auth',
+                permanant:false
+            }
+        }
+    }
 
-//     return {
-//         props:{}
-//     }
-// }
+    return {
+        props:{}
+    }
+}
 
 const Profiles = () => {
     const router = useRouter();
@@ -36,7 +36,7 @@ const Profiles = () => {
                                 <img src="/images/default-blue.png" alt=""/>
                             </div>
                             <div className="mt-4 text-gray-400 text-2xl text-center group-hover:text-white">
-                                {user?.name}
+                                {user?.username}
                             </div>
                         </div>
                     </div>

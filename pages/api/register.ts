@@ -4,13 +4,14 @@ import prismadb from '../../libs/prismadb';
 
 export default async function handler(req:NextApiRequest, res:NextApiResponse){
 
+    console.log("in register function")
 
     try{
         if (req.method !== 'POST') {
             return res.status(405).end()
         }
 
-        const {email, name, password} = req.body;
+        const {email, username, password} = req.body;
 
         const existingUser = await prismadb.user.findUnique({
             where: {
@@ -27,7 +28,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
         const user = await prismadb.user.create({
             data:{
                 email, 
-                name,
+                username,
                 hashedPassword,
                 image:'',
                 emailVerified:new Date(),
