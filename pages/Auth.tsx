@@ -4,13 +4,16 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
  
+import {FcGoogle} from 'react-icons/fc';
+import {FaGithub} from 'react-icons/fa';
+
+
 
 const Auth = () => {
 
-    const router = useRouter();
 
     const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
     const [variant, setVariant] = useState("login");
@@ -26,33 +29,30 @@ const Auth = () => {
             await signIn('credentials', {
                 email,
                 password,
-                redirect: false,
-                callbackurl:'/'
+                callbackurl:'/profiles'
             })
-
-            router.push('/')
 
         }catch(error){
             console.log(error)
         }
 
-    }, [email, password, router])
+    }, [email, password])
 
     const register = useCallback(async()=>{
         try{
             await axios.post('/api/register',{
                 email,
-                username,
-                password
+                name,
+                password,
             })
+
 
             login()
         }catch(error){
-            console.log("reacher here")
             console.log(error)
         }
-
-    }, [email, username, password, login])
+        
+    }, [email, name, password, login])
 
 
     return (
@@ -69,10 +69,10 @@ const Auth = () => {
                         <div className="flex flex-col gap-4">
                             {variant == 'register' &&
                             <Input 
-                                label="Username"
-                                onChange={(e:any)=>{setUsername(e.target.value)}}
-                                id="username"
-                                value={username}
+                                label="name"
+                                onChange={(e:any)=>{setName(e.target.value)}}
+                                id="name"
+                                value={name}
                             /> 
     }
                             <Input 
@@ -93,6 +93,14 @@ const Auth = () => {
                         <button onClick={variant === 'login' ? login : register} className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
                             {variant === 'login' ? 'Login' : 'Signup' }
                         </button>
+                        <div className="flex flex-row items-cener gap-4 mt-8 justify-center">
+                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity:80 transistion">
+                                <FcGoogle size={30}/>
+                            </div>  
+                            <div onClick={() => signIn('github', {callbackUrl: '/profiles' })} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity:80 transistion">
+                                <FaGithub size={30}/>
+                            </div>                   
+                        </div>
                         <p className="mt-10 text-neutral-500">
                             {variant === 'login'? 'First time using Netflix?' : 'already have an account'}
                             <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer">
